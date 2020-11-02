@@ -19,9 +19,8 @@ dependencies {
             'junit:junit:4.12'
 }
 
-nrl {
-    publishNexus = true
-    resolveNexus = true
+hgit{
+    forceGit = true
 }
 
 pluginBundle {
