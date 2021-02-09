@@ -21,6 +21,7 @@ class AppZip extends Zip {
     Jar pathJar(String jarName, String mainClassName, Closure configurePathingJar = null)
     {
         PathingJar pjar = PathingJar.createFrom(this, jarName, mainClassName, configurePathingJar)
+        pjar.archiveAppendix 'zip'
         pathJars.add(pjar)
         subAppDirs.each { name, files ->
             files.each {
@@ -28,7 +29,11 @@ class AppZip extends Zip {
             }
         }
         dependsOn(pjar)
-        from(pjar)
+        from(pjar){
+            rename {
+                rename('(.*)-zip(.*)', '$1$2')
+            }
+        }
 
         doLast{
             pjar.outputs.getFiles().each {it.delete()}

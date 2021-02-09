@@ -19,6 +19,7 @@ class AppTar extends Tar {
     Jar pathJar(String jarName, String mainClassName, Closure configurePathingJar = null)
     {
         PathingJar pjar = PathingJar.createFrom(this, jarName, mainClassName, configurePathingJar)
+        pjar.archiveAppendix 'tar'
         pathJars.add(pjar)
         subAppDirs.each { name, files ->
             files.each {
@@ -26,7 +27,11 @@ class AppTar extends Tar {
             }
         }
         dependsOn(pjar)
-        from(pjar)
+        from(pjar){
+            rename {
+                rename('(.*)-tar(.*)', '$1$2')
+            }
+        }
 
         doLast{
             pjar.outputs.getFiles().each {it.delete()}
