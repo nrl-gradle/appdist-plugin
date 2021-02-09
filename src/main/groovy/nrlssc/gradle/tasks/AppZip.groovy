@@ -21,7 +21,7 @@ class AppZip extends Zip {
     Jar pathJar(String jarName, String mainClassName, Closure configurePathingJar = null)
     {
         PathingJar pjar = PathingJar.createFrom(this, jarName, mainClassName, configurePathingJar)
-        pjar.archiveAppendix 'zip'
+        pjar.archiveAppendix.set('zip')
         pathJars.add(pjar)
         subAppDirs.each { name, files ->
             files.each {
@@ -81,7 +81,7 @@ class AppZip extends Zip {
             into "lib"
         }
 
-        classifier = "app"
+        archiveClassifier.set("app")
         internalJar = (Jar)project.tasks.create("$name-AppJar-zip", Jar.class)
         dependsOn(internalJar)
         from(internalJar){
@@ -94,7 +94,7 @@ class AppZip extends Zip {
         description = 'Creates a zipped, distributable, set of pathing jars with a default entry-point at your "mainClassName".'
 
         internalJar.configure {
-            appendix = 'appZip'
+            archiveAppendix.set('appZip')
             from(project.sourceSets.main.output)
             description = 'Creates the project Jar that is used by appZip and appTar: you should not run this task directly.'
         }

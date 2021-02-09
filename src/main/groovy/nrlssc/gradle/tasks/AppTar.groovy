@@ -19,7 +19,7 @@ class AppTar extends Tar {
     Jar pathJar(String jarName, String mainClassName, Closure configurePathingJar = null)
     {
         PathingJar pjar = PathingJar.createFrom(this, jarName, mainClassName, configurePathingJar)
-        pjar.archiveAppendix 'tar'
+        pjar.archiveAppendix.set('tar')
         pathJars.add(pjar)
         subAppDirs.each { name, files ->
             files.each {
@@ -74,7 +74,7 @@ class AppTar extends Tar {
         }
 
         
-        classifier = "app"
+        archiveClassifier.set("app")
         internalJar = (Jar)project.tasks.create("$name-AppJar-tar", Jar.class)
         dependsOn(internalJar)
         from(internalJar){
@@ -87,7 +87,7 @@ class AppTar extends Tar {
         description = 'Creates a tarred, distributable, executable, pathing internalJar with an entry-point at your "mainClassName".'
 
         internalJar.configure {
-            appendix = 'appTar'
+            archiveAppendix.set('appTar')
             from(project.sourceSets.main.output)
             description = 'Creates the project Jar that is used by appZip and appTar: you should not run this task directly.'
         }
