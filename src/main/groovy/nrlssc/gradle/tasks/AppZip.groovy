@@ -29,7 +29,6 @@ class AppZip extends Zip {
         }
         dependsOn(pjar)
         from(pjar)
-        inputs.file("${pjar.archiveFile.get().asFile.getAbsolutePath()}")
 
         doLast{
             pjar.outputs.getFiles().each {it.delete()}
@@ -95,7 +94,6 @@ class AppZip extends Zip {
             description = 'Creates the project Jar that is used by appZip and appTar: you should not run this task directly.'
         }
 
-        inputs.file("${internalJar.archiveFile.get().asFile.getAbsolutePath()}")
     }
 
 
