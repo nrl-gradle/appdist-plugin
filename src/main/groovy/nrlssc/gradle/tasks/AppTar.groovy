@@ -27,7 +27,7 @@ class AppTar extends Tar {
         }
         dependsOn(pjar)
         from(pjar)
-        outputs.file("${pjar.archiveFile.get().asFile.getAbsolutePath()}")
+        inputs.file("${pjar.archiveFile.get().asFile.getAbsolutePath()}")
 
         doLast{
             pjar.outputs.getFiles().each {it.delete()}
@@ -69,8 +69,9 @@ class AppTar extends Tar {
             into "lib"
         }
 
+        
         classifier = "app"
-        internalJar = (Jar)project.tasks.create("$name-AppJar", Jar.class)
+        internalJar = (Jar)project.tasks.create("$name-AppJar-tar", Jar.class)
         dependsOn(internalJar)
         from(internalJar){
             into("lib")
@@ -87,7 +88,7 @@ class AppTar extends Tar {
             description = 'Creates the project Jar that is used by appZip and appTar: you should not run this task directly.'
         }
 
-        outputs.file("${internalJar.archiveFile.get().asFile.getAbsolutePath()}")
+        inputs.file("${internalJar.archiveFile.get().asFile.getAbsolutePath()}")
     }
 
 }
