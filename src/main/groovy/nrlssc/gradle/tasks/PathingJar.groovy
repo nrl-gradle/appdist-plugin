@@ -6,17 +6,17 @@ import org.gradle.api.tasks.bundling.Jar
 
 class PathingJar extends Jar {
 
-    static PathingJar createFrom(AppTar appTar, String jarName, String mainClassName, Closure config)
+    static PathingJar createFrom(AppTask appTask, String jarName, String mainClassName, Closure config)
     {
-        Project project = appTar.getProject()
-        String taskName =   "$appTar.name-$jarName-PathingJar"
+        Project project = appTask.getProject()
+        String taskName =   "$appTask.name-$jarName-PathingJar"
         PathingJar pjar = project.tasks.create(taskName, PathingJar.class)
         project.sourceSets.each{ ss ->
             ss.allSource.srcDirs.each { src ->
                 if(src.exists()) pjar.inputs.dir(src.absolutePath)
             }
         }
-        pjar.archiveName = jarName + ".jar"
+        pjar.archiveFileName.set(jarName + ".jar")
         if(config != null)
         {
             pjar.configure(config)
@@ -27,9 +27,10 @@ class PathingJar extends Jar {
                 cPath +=  "lib/" + it.name + " "
             }
 
-            cPath += "lib/" + appTar.internalJar.outputs.files.first().name.replace("-appTar", "") + " "
-            appTar.subAppDirs.keySet().each {
-                appTar.subAppDirs.get(it).each { dir ->
+            def appendixInternal = appTask.internalJar.getArchiveAppendix()
+            cPath += "lib/" + appTask.internalJar.outputs.files.first().name.replace("-$appendixInternal", "") + " "
+            appTask.subAppDirs.keySet().each {
+                appTask.subAppDirs.get(it).each { dir ->
                     if (dir.exists() && dir.isDirectory()) {
                         cPath += "$it/ "
                         dir.eachFileRecurse { fl ->
@@ -53,56 +54,6 @@ class PathingJar extends Jar {
 
         return pjar
     }
-
-    static PathingJar createFrom(AppZip appTar, String jarName, String mainClassName, Closure config)
-    {
-        Project project = appTar.getProject()
-        String taskName =   "$appTar.name-$jarName-PathingJar"
-        PathingJar pjar = project.tasks.create(taskName, PathingJar.class)
-        project.sourceSets.each{ ss ->
-            ss.allSource.srcDirs.each{ src ->
-                if(src.exists()) pjar.inputs.dir(src.absolutePath)
-            }
-        }
-        pjar.archiveName = jarName + ".jar"
-        if(config != null)
-        {
-            pjar.configure(config)
-        }
-        pjar.doFirst{
-            version = ''
-            def cPath = ""
-            project.configurations.default.files.each {
-                cPath +=  "lib/" + it.name + " "
-            }
-
-            cPath += "lib/" + appTar.internalJar.outputs.files.first().name.replace("-appZip", "") + " "
-            appTar.subAppDirs.keySet().each {
-                appTar.subAppDirs.get(it).each { dir ->
-                    if (dir.exists() && dir.isDirectory()) {
-                        cPath += "$it/ "
-                        dir.eachFileRecurse { fl ->
-                            def name = ''
-                            name = fl.absolutePath.replace("\\", "/").split(dir.absolutePath.replace("\\", "/"))[1]
-                            name = "$it" + name
-                            cPath += name + " "
-                        }
-                    }
-                }
-            }
-
-
-            manifest {
-                attributes('Implementation-Title': project.name,
-                        'Implementation-Version': project.version,
-                        'Main-Class': mainClassName,
-                        'Class-Path': cPath)
-            }
-        }
-
-        return pjar
-    }
-
 
     PathingJar()
     {

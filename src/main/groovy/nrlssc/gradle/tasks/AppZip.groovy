@@ -5,68 +5,27 @@ import org.gradle.api.Project
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.bundling.Zip
 
-import java.nio.file.Paths
-
-class AppZip extends Zip {
+class AppZip extends Zip implements AppTask{
 
     Jar internalJar
+    AppTaskManager manager
 
     Jar jar(final Closure jarConfig)
     {
         internalJar.configure(jarConfig)
+        manager = new AppTaskManager(this)
         return internalJar
     }
 
-    private List<Jar> pathJars = new ArrayList<>()
     Jar pathJar(String jarName, String mainClassName, Closure configurePathingJar = null)
     {
-        PathingJar pjar = PathingJar.createFrom(this, jarName, mainClassName, configurePathingJar)
-        pjar.archiveAppendix.set('zip')
-        pathJars.add(pjar)
-        subAppDirs.each { name, files ->
-            files.each {
-                pjar.inputs.dir(it.absolutePath)
-            }
-        }
-        dependsOn(pjar)
-        from(pjar){
-            rename {
-                rename('(.*)-zip(.*)', '$1$2')
-            }
-        }
-
-        doLast{
-            pjar.outputs.getFiles().each {it.delete()}
-        }
-        
-        return pjar
+        return manager.pathJar(jarName, mainClassName, configurePathingJar)
     }
 
-    Map<String, List<File>> subAppDirs = new HashMap<>()
     File appDir(File dir, String appInto = "app")
     {
-        if(dir.exists()) {
-            String subPath = appInto
-            if(subAppDirs.get(subPath) == null)
-            {
-                subAppDirs.put(subPath, new ArrayList<>())
-            }
-            subAppDirs.get(subPath).add(dir)
-
-            from(dir){
-                into(subPath)
-            }
-
-            inputs.dir(dir.absolutePath)
-
-            pathJars.each {
-                it.inputs.dir(dir.absolutePath)
-            }
-        }
-
-        return dir
+        return manager.appDir(dir, appInto)
     }
-
 
 
     AppZip() {
@@ -101,7 +60,13 @@ class AppZip extends Zip {
 
     }
 
+    @Override
+    Jar getInternalJar() {
+        return internalJar
+    }
 
-
-
+    @Override
+    Map<String, List<File>> getSubAppDirs() {
+        return manager.subAppDirs
+    }
 }
