@@ -13,7 +13,6 @@ class AppZip extends Zip implements AppTask{
     Jar jar(final Closure jarConfig)
     {
         internalJar.configure(jarConfig)
-        manager = new AppTaskManager(this)
         return internalJar
     }
 
@@ -31,6 +30,8 @@ class AppZip extends Zip implements AppTask{
     AppZip() {
         super()
         Project project = getProject()
+        manager = new AppTaskManager(this)
+
 
         doLast{
             internalJar.outputs.getFiles().each {it.delete()}

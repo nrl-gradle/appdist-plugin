@@ -13,7 +13,6 @@ class AppTar extends Tar implements AppTask {
     Jar jar(final Closure jarConfig)
     {
         internalJar.configure(jarConfig)
-        manager = new AppTaskManager(this)
         return internalJar
     }
 
@@ -30,6 +29,7 @@ class AppTar extends Tar implements AppTask {
     AppTar() {
         super()
         Project project = getProject()
+        manager = new AppTaskManager(this)
 
         doLast{
             internalJar.outputs.getFiles().each {it.delete()}
