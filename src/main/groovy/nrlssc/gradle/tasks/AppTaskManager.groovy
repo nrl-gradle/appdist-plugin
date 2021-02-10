@@ -27,7 +27,7 @@ class AppTaskManager {
         task.dependsOn(pjar)
         task.from(pjar)
 
-        task.project.gradle.taskGraph.addShutdownHook {
+        task.project.gradle.buildFinished {
             pjar.outputs.getFiles().each {if(it.exists()) it.delete()}
         }
 
