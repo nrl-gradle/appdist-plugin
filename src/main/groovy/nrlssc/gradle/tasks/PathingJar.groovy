@@ -24,11 +24,13 @@ class PathingJar extends Jar {
         pjar.doFirst{
             def cPath = ""
             project.configurations.default.files.each {
-                cPath +=  "lib/" + it.name + " "
+                cPath +=  "lib/$it.name "
             }
 
             def appendixInternal = appTask.internalJar.getArchiveAppendix()
-            cPath += "lib/" + appTask.internalJar.outputs.files.first().name.replace("-$appendixInternal", "") + " "
+            def intJarName = appTask.internalJar.archiveFile.replace("-$appendixInternal", "")
+            logger.lifecycle(appTask.internalJar.outputs.files.first().name + " is it?")
+            cPath += "lib/$intJarName "
             appTask.subAppDirs.keySet().each {
                 appTask.subAppDirs.get(it).each { dir ->
                     if (dir.exists() && dir.isDirectory()) {
