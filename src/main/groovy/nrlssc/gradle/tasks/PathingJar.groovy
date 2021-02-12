@@ -28,7 +28,7 @@ class PathingJar extends Jar {
             }
 
             def appendixInternal = appTask.internalJar.getArchiveAppendix()
-            def intJarName = appTask.internalJar.archiveFile.replace("-$appendixInternal", "")
+            def intJarName = appTask.internalJar.archiveFileName.get().replace("-$appendixInternal", "")
             logger.lifecycle(appTask.internalJar.outputs.files.first().name + " is it?")
             cPath += "lib/$intJarName "
             appTask.subAppDirs.keySet().each {
