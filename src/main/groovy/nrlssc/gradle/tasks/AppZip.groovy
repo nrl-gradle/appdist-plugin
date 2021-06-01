@@ -12,20 +12,19 @@ class AppZip extends Zip implements AppTask{
     @Internal
     AppTaskManager manager
 
-    @Internal
+
     Jar jar(final Closure jarConfig)
     {
         internalJar.configure(jarConfig)
         return internalJar
     }
 
-    @Internal
+
     Jar pathJar(String jarName, String mainClassName, Closure configurePathingJar = null)
     {
         return manager.pathJar(jarName, mainClassName, configurePathingJar)
     }
 
-    @Internal
     File appDir(File dir, String appInto = "app")
     {
         return manager.appDir(dir, appInto)
