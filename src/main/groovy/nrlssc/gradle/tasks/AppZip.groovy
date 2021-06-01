@@ -41,7 +41,10 @@ class AppZip extends Zip implements AppTask{
             internalJar.outputs.getFiles().each {it.delete()}
         }
         
-        from {project.configurations.default}{
+        from {project.configurations.compileClasspath}{
+            into "lib"
+        }
+        from {project.configurations.runtimeClasspath} {
             into "lib"
         }
 

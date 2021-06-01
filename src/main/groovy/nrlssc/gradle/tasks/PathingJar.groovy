@@ -23,8 +23,18 @@ class PathingJar extends Jar {
         }
         pjar.doFirst{
             def cPath = ""
-            project.configurations.default.files.each {
-                cPath +=  "lib/$it.name "
+            List<String> handled = new ArrayList<>()
+            project.configurations.compileClasspath.files.each {
+                if(!handled.contains(it.name)) {
+                    cPath += "lib/$it.name "
+                    handled.add(it.name)
+                }
+            }
+            project.configurations.runtimeClasspath.files.each {
+                if(!handled.contains(it.name)) {
+                    cPath += "lib/$it.name "
+                    handled.add(it.name)
+                }
             }
 
             def intJarName = appTask.internalJar.archiveFileName.get().replace("-appZip", "").replace("-appTar", "")
