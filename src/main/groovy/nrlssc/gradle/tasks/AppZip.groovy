@@ -65,7 +65,6 @@ class AppZip extends Zip implements AppTask{
     }
 
     @Override
-    @OutputFile
     Jar getInternalJar() {
         return internalJar
     }

@@ -63,7 +63,6 @@ class AppTar extends Tar implements AppTask {
     }
 
     @Override
-    @OutputFile
     Jar getInternalJar() {
         return internalJar
     }
