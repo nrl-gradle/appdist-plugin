@@ -69,7 +69,6 @@ class AppTar extends Tar implements AppTask {
     }
 
     @Override
-    @InputFiles
     Map<String, List<File>> getSubAppDirs() {
         return manager.subAppDirs
     }

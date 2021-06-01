@@ -71,7 +71,6 @@ class AppZip extends Zip implements AppTask{
     }
 
     @Override
-    @InputFiles
     Map<String, List<File>> getSubAppDirs() {
         return manager.subAppDirs
     }
