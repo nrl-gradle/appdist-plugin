@@ -2,6 +2,8 @@ package nrlssc.gradle.tasks
 
 import nrlssc.gradle.AppDistPlugin
 import org.gradle.api.Project
+import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.bundling.Tar
 
@@ -61,11 +63,13 @@ class AppTar extends Tar implements AppTask {
     }
 
     @Override
+    @OutputFile
     Jar getInternalJar() {
         return internalJar
     }
 
     @Override
+    @InputFiles
     Map<String, List<File>> getSubAppDirs() {
         return manager.subAppDirs
     }
