@@ -2,27 +2,30 @@ package nrlssc.gradle.tasks
 
 import nrlssc.gradle.AppDistPlugin
 import org.gradle.api.Project
-import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.bundling.Tar
 
 class AppTar extends Tar implements AppTask {
 
-    public Jar internalJar
+    Jar internalJar
+    @Internal
     AppTaskManager manager
 
+    @Internal
     Jar jar(final Closure jarConfig)
     {
         internalJar.configure(jarConfig)
         return internalJar
     }
 
+    @Internal
     Jar pathJar(String jarName, String mainClassName, Closure configurePathingJar = null)
     {
         return manager.pathJar(jarName, mainClassName, configurePathingJar)
     }
 
+    @Internal
     File appDir(File dir, String appInto = "app")
     {
         return manager.appDir(dir, appInto)
