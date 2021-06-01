@@ -40,6 +40,7 @@ class AppTar extends Tar implements AppTask {
         doLast{
             internalJar.outputs.getFiles().each {it.delete()}
         }
+        duplicatesStrategy = 'include'
 
         from {project.configurations.compileClasspath}{
             into "lib"
