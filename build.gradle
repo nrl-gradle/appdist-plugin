@@ -12,7 +12,7 @@ dependencies {
     compileClasspath gradleApi()
     compileClasspath localGroovy()
     
-    compileClasspath 'mil.navy.nrlssc:gplugin-commons:2.0.8'
+    compileClasspath 'mil.navy.nrlssc:gplugin-commons:2.0.10'
 
     testImplementation gradleTestKit(),
             'junit:junit:4.12'
