@@ -26,7 +26,7 @@ class AppDistPlugin implements Plugin<Project>{
 
         AppZip azTask = project.tasks.create("appZip", AppZip.class)
         AppTar atTask = project.tasks.create("appTar", AppTar.class)
-        
+
         project.pluginManager.withPlugin('nrlssc.hgit'){
             Task rvf = project.tasks.getByName('rootVersionFile')
             azTask.from(rvf)
