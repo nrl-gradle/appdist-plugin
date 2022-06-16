@@ -46,7 +46,7 @@ class AppDistPlugin implements Plugin<Project>{
             classpath = project.sourceSets.main.runtimeClasspath + project.sourceSets.test.runtimeClasspath
         }
 
-        project.afterEvaluate {
+        project.gradle.projectsEvaluated {
             if(project.mainClassName != null && project.mainClassName != "unspecified") {
                 azTask.pathJar("$project.name-RunMain", project.mainClassName)
                 atTask.pathJar("$project.name-RunMain", project.mainClassName)
