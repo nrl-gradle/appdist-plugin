@@ -2,7 +2,7 @@ plugins{
     id 'java-gradle-plugin'
     id 'groovy'
     id 'com.gradle.plugin-publish' version '1.0.0-rc-1'
-    id 'nrlssc.gradle' version '2.0.58'
+    id 'nrlssc.gradle' version '3.0.106'
 }
 
 sourceCompatibility = 1.8
@@ -12,7 +12,7 @@ dependencies {
     api gradleApi()
     api localGroovy()
     
-    api 'mil.navy.nrlssc:gplugin-commons:3.0.14'
+    api 'mil.navy.nrlssc:gplugin-commons:3.0.15'
 
     testImplementation gradleTestKit(),
             'junit:junit:4.12'
