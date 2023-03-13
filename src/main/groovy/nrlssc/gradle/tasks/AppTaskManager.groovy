@@ -25,7 +25,11 @@ class AppTaskManager {
             }
         }
         task.dependsOn(pjar)
-        task.from(pjar)
+        task.from(pjar) {
+            rename {
+                "${jarName}.jar"
+            }
+        }
 
         task.project.gradle.buildFinished {
             pjar.outputs.getFiles().each {if(it.exists()) it.delete()}

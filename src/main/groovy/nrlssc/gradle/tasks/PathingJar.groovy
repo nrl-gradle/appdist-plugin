@@ -16,7 +16,7 @@ class PathingJar extends Jar {
                 if(src.exists()) pjar.inputs.dir(src.absolutePath)
             }
         }
-        pjar.archiveFileName.set(jarName + ".jar")
+        pjar.archiveFileName.set(taskName + ".jar")
         if(config != null)
         {
             pjar.configure(config)

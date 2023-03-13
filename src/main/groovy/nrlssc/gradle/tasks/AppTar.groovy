@@ -23,9 +23,7 @@ class AppTar extends Tar implements AppTask {
 
     Jar pathJar(String jarName, String mainClassName, Closure configurePathingJar = null)
     {
-        Jar retJar = manager.pathJar(jarName, mainClassName, configurePathingJar)
-        this.dependsOn(retJar)
-        return retJar
+        return manager.pathJar(jarName, mainClassName, configurePathingJar)
     }
 
 
