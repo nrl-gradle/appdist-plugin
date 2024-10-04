@@ -13,7 +13,7 @@ dependencies {
     api gradleApi()
     api localGroovy()
     
-    api 'mil.navy.nrlssc:gplugin-commons:3.0.17'
+    api 'mil.navy.nrlssc:gplugin-commons:3.0.20'
 
     testImplementation gradleTestKit(),
             'junit:junit:4.12'
