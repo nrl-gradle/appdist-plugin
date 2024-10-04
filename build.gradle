@@ -1,7 +1,8 @@
 plugins{
     id 'java-gradle-plugin'
     id 'groovy'
-    id 'com.gradle.plugin-publish' version '1.0.0-rc-1'
+    id 'java'
+    id 'com.gradle.plugin-publish' version '1.3.0'
     id 'nrlssc.gradle' version '4.0.126'
 }
 
@@ -28,15 +29,15 @@ pluginBundle {
     tags = ['application', 'app', 'distribution']
 }
 
-
 gradlePlugin {
     //noinspection GroovyAssignabilityCheck
     plugins {
-        appDistPlugin {
+        create('appDistPlugin') {
             id = 'nrlssc.appdist'
             displayName = 'Application Distribution Plugin'
             description = 'Adds tasks for generating distributables which, when decompressed, contain an executable pathing jar to your main method.'
             implementationClass = 'nrlssc.gradle.AppDistPlugin'
+
         }
     }
 }
