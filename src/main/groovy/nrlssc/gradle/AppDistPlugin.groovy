@@ -24,36 +24,37 @@ class AppDistPlugin implements Plugin<Project>{
 
         project.convention.plugins.MockApplicationConvention = new MockApplicationConvention()
 
-        AppZip azTask = project.tasks.create("appZip", AppZip.class)
-        AppTar atTask = project.tasks.create("appTar", AppTar.class)
+        project.pluginManager.withPlugin('java') {
+            AppZip azTask = project.tasks.create("appZip", AppZip.class)
+            AppTar atTask = project.tasks.create("appTar", AppTar.class)
 
-        project.pluginManager.withPlugin('nrlssc.hgit'){
-            Task rvf = project.tasks.getByName('rootVersionFile')
-            azTask.from(rvf)
-            azTask.dependsOn(rvf)
-            atTask.from(rvf)
-            atTask.dependsOn(rvf)
-        }
-        
-        azTask.appDir(project.file("app"))
-        atTask.appDir(project.file("app"))
-        AppConfigure appConfig = project.tasks.create("app", AppConfigure.class)
-        appConfig.init(project, azTask, atTask)
+            project.pluginManager.withPlugin('nrlssc.hgit') {
+                Task rvf = project.tasks.getByName('rootVersionFile')
+                azTask.from(rvf)
+                azTask.dependsOn(rvf)
+                atTask.from(rvf)
+                atTask.dependsOn(rvf)
+            }
 
-        JavaExec runTask = project.tasks.create("run", JavaExec.class)
-        runTask.configure {
-            group = TASK_GROUP
-            classpath = project.sourceSets.main.runtimeClasspath + project.sourceSets.test.runtimeClasspath
-        }
+            azTask.appDir(project.file("app"))
+            atTask.appDir(project.file("app"))
+            AppConfigure appConfig = project.tasks.create("app", AppConfigure.class)
+            appConfig.init(project, azTask, atTask)
 
-        project.gradle.projectsEvaluated {
-            if(project.mainClassName != null && project.mainClassName != "unspecified") {
-                azTask.pathJar("$project.name-RunMain", project.mainClassName)
-                atTask.pathJar("$project.name-RunMain", project.mainClassName)
-                runTask.main = project.mainClassName
+            JavaExec runTask = project.tasks.create("run", JavaExec.class)
+            runTask.configure {
+                group = TASK_GROUP
+                classpath = project.sourceSets.main.runtimeClasspath + project.sourceSets.test.runtimeClasspath
+            }
+
+            project.gradle.projectsEvaluated {
+                if (project.mainClassName != null && project.mainClassName != "unspecified") {
+                    azTask.pathJar("$project.name-RunMain", project.mainClassName)
+                    atTask.pathJar("$project.name-RunMain", project.mainClassName)
+                    runTask.main = project.mainClassName
+                }
             }
         }
-
 
         project.plugins.withType(DistributionPlugin){
             ConfigureDistributionAndHgit()
