@@ -25,6 +25,11 @@ class AppDistPlugin implements Plugin<Project>{
         project.convention.plugins.MockApplicationConvention = new MockApplicationConvention()
 
         project.pluginManager.withPlugin('java') {
+            project.configurations{
+                appClasspath{
+                    extendsFrom project.configurations.default
+                }
+            }
             AppZip azTask = project.tasks.create("appZip", AppZip.class)
             AppTar atTask = project.tasks.create("appTar", AppTar.class)
 
@@ -35,6 +40,8 @@ class AppDistPlugin implements Plugin<Project>{
                 atTask.from(rvf)
                 atTask.dependsOn(rvf)
             }
+
+
 
             azTask.appDir(project.file("app"))
             atTask.appDir(project.file("app"))

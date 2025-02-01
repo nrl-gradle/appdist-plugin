@@ -42,10 +42,7 @@ class AppTar extends Tar implements AppTask {
         }
         duplicatesStrategy = 'exclude'
 
-        from {project.configurations.compileClasspath}{
-            into "lib"
-        }
-        from {project.configurations.runtimeClasspath} {
+        from {project.configurations.appClasspath}{
             into "lib"
         }
 
