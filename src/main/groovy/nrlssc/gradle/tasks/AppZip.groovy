@@ -2,12 +2,13 @@ package nrlssc.gradle.tasks
 
 import nrlssc.gradle.AppDistPlugin
 import org.gradle.api.Project
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.bundling.Zip
 
 class AppZip extends Zip implements AppTask{
-
+    @Internal
     Jar internalJar
     @Internal
     AppTaskManager manager
@@ -45,12 +46,14 @@ class AppZip extends Zip implements AppTask{
             into "lib"
         }
 
+        String mainName = name
+
         archiveClassifier.set("app")
         internalJar = (Jar)project.tasks.create("$name-AppJar-zip", Jar.class)
         dependsOn(internalJar)
         from(internalJar){
             into("lib")
-            rename('(.*)-appZip(.*)', '$1$2')
+            rename("(.*)-$mainName(.*)", '$1$2')
         }
 
 
@@ -58,7 +61,7 @@ class AppZip extends Zip implements AppTask{
         description = 'Creates a zipped, distributable, set of pathing jars with a default entry-point at your "mainClassName".'
 
         internalJar.configure {
-            archiveAppendix.set('appZip')
+            archiveAppendix.set("$mainName")
             from(project.sourceSets.main.output)
             description = 'Creates the project Jar that is used by appZip and appTar: you should not run this task directly.'
         }

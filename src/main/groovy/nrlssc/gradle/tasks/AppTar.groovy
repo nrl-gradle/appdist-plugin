@@ -9,6 +9,7 @@ import org.gradle.api.tasks.bundling.Tar
 
 class AppTar extends Tar implements AppTask {
 
+    @Internal
     Jar internalJar
     @Internal
     AppTaskManager manager
@@ -45,14 +46,14 @@ class AppTar extends Tar implements AppTask {
         from {project.configurations.appClasspath}{
             into "lib"
         }
-
+        String mainName = name
         
         archiveClassifier.set("app")
         internalJar = (Jar)project.tasks.create("$name-AppJar-tar", Jar.class)
         dependsOn(internalJar)
         from(internalJar){
             into("lib")
-            rename('(.*)-appTar(.*)', '$1$2')
+            rename("(.*)-$mainName(.*)", '$1$2')
         }
 
 
@@ -60,7 +61,7 @@ class AppTar extends Tar implements AppTask {
         description = 'Creates a tarred, distributable, executable, pathing internalJar with an entry-point at your "mainClassName".'
 
         internalJar.configure {
-            archiveAppendix.set('appTar')
+            archiveAppendix.set("$mainName")
             from(project.sourceSets.main.output)
             description = 'Creates the project Jar that is used by appZip and appTar: you should not run this task directly.'
         }
