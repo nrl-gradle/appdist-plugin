@@ -24,20 +24,14 @@ class PathingJar extends Jar {
         pjar.doFirst{
             def cPath = ""
             List<String> handled = new ArrayList<>()
-            project.configurations.compileClasspath.files.each {
-                if(!handled.contains(it.name)) {
-                    cPath += "lib/$it.name "
-                    handled.add(it.name)
-                }
-            }
-            project.configurations.runtimeClasspath.files.each {
+            project.configurations.appClasspath.files.each {
                 if(!handled.contains(it.name)) {
                     cPath += "lib/$it.name "
                     handled.add(it.name)
                 }
             }
 
-            def intJarName = appTask.internalJar.archiveFileName.get().replace("-appZip", "").replace("-appTar", "")
+            def intJarName = appTask.internalJar.archiveFileName.get().replace("-$appTask.name", "")
             cPath += "lib/$intJarName "
             appTask.subAppDirs.keySet().each {
                 appTask.subAppDirs.get(it).each { dir ->
@@ -69,6 +63,7 @@ class PathingJar extends Jar {
     {
         super()
         description = 'Creates a PathingJar for use in AppZip/AppTar - nonfunctional on its own.'
+        outputs.upToDateWhen { false }
     }
     //TODO also need to remove 'Task' from all the tasks, and update them to the AppZip style configurations.
 }

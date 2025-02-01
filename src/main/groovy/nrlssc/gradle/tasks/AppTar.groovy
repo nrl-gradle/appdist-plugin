@@ -2,13 +2,13 @@ package nrlssc.gradle.tasks
 
 import nrlssc.gradle.AppDistPlugin
 import org.gradle.api.Project
+import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.bundling.Tar
 
 class AppTar extends Tar implements AppTask {
-
     @Internal
     Jar internalJar
     @Internal
@@ -21,12 +21,10 @@ class AppTar extends Tar implements AppTask {
         return internalJar
     }
 
-
     Jar pathJar(String jarName, String mainClassName, Closure configurePathingJar = null)
     {
         return manager.pathJar(jarName, mainClassName, configurePathingJar)
     }
-
 
     File appDir(File dir, String appInto = "app")
     {
@@ -35,37 +33,17 @@ class AppTar extends Tar implements AppTask {
 
     AppTar() {
         super()
-        Project project = getProject()
-        manager = new AppTaskManager(this)
-
-        doLast{
-            internalJar.outputs.getFiles().each {it.delete()}
-        }
-        duplicatesStrategy = 'exclude'
-
-        from {project.configurations.appClasspath}{
-            into "lib"
-        }
-        String mainName = name
-        
-        archiveClassifier.set("app")
-        internalJar = (Jar)project.tasks.create("$name-AppJar-tar", Jar.class)
-        dependsOn(internalJar)
-        from(internalJar){
-            into("lib")
-            rename("(.*)-$mainName(.*)", '$1$2')
-        }
-
-
         group = AppDistPlugin.TASK_GROUP
         description = 'Creates a tarred, distributable, executable, pathing internalJar with an entry-point at your "mainClassName".'
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        archiveClassifier.set('app')
 
-        internalJar.configure {
-            archiveAppendix.set("$mainName")
-            from(project.sourceSets.main.output)
-            description = 'Creates the project Jar that is used by appZip and appTar: you should not run this task directly.'
+        manager = new AppTaskManager(this)
+        internalJar = manager.createInternalJarTask()
+
+        into('lib'){
+            from project.configurations.appClasspath
         }
-
     }
 
     @Override
