@@ -23,7 +23,7 @@ class AppZip extends Zip implements AppTask{
     }
 
 
-    Jar pathJar(String jarName, String mainClassName, Closure configurePathingJar = null)
+    Jar pathJar(String jarName, String mainClassName = this.mainClassName, Closure configurePathingJar = null)
     {
         return manager.pathJar(jarName, mainClassName, configurePathingJar)
     }
@@ -57,4 +57,17 @@ class AppZip extends Zip implements AppTask{
     Map<String, List<File>> getSubAppDirs() {
         return manager.subAppDirs
     }
+
+
+    String mainClassName = 'unspecified'
+    @Override
+    def setMainClassName(String className) {
+        this.mainClassName = className
+    }
+    @Override
+    String getMainClassName() {
+        return mainClassName
+    }
+
+
 }

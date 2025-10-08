@@ -5,7 +5,7 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.Task
 
-class AppConfigure extends DefaultTask {
+class AppConfigure extends DefaultTask{
 
     private Project project
     private AppZip appZip
@@ -22,10 +22,21 @@ class AppConfigure extends DefaultTask {
         }
     }
 
-
     @Override
     Task configure(Closure closure) {
         appZip.configure(closure)
         appTar.configure(closure)
+        this.mainClassName = appZip.getMainClassName()
+        return this
+    }
+
+    String mainClassName = 'unspecified'
+
+    def setMainClassName(String className) {
+        this.mainClassName = className
+    }
+
+    String getMainClassName() {
+        return mainClassName
     }
 }

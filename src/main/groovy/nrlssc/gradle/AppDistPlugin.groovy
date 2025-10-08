@@ -1,8 +1,8 @@
 package nrlssc.gradle
 
-import nrlssc.gradle.conventions.MockApplicationConvention
 import nrlssc.gradle.tasks.AppConfigure
 import nrlssc.gradle.tasks.AppTar
+import nrlssc.gradle.tasks.AppTask
 import nrlssc.gradle.tasks.AppZip
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -22,16 +22,14 @@ class AppDistPlugin implements Plugin<Project>{
     void apply(Project target) {
         this.project = target
 
-        project.convention.plugins.MockApplicationConvention = new MockApplicationConvention()
-
         project.pluginManager.withPlugin('java') {
             project.configurations{
                 appClasspath{
                     extendsFrom project.configurations.default
                 }
             }
-            AppZip azTask = project.tasks.create("appZip", AppZip.class)
-            AppTar atTask = project.tasks.create("appTar", AppTar.class)
+            AppZip azTask = project.tasks.register("appZip", AppZip.class).get()
+            AppTar atTask = project.tasks.register("appTar", AppTar.class).get()
 
             project.pluginManager.withPlugin('nrlssc.hgit') {
                 Task rvf = project.tasks.getByName('rootVersionFile')
@@ -43,22 +41,24 @@ class AppDistPlugin implements Plugin<Project>{
 
 
 
+
             azTask.appDir(project.file("app"))
             atTask.appDir(project.file("app"))
-            AppConfigure appConfig = project.tasks.create("app", AppConfigure.class)
-            appConfig.init(project, azTask, atTask)
+            AppConfigure app = project.tasks.register("app", AppConfigure.class).get()
 
-            JavaExec runTask = project.tasks.create("run", JavaExec.class)
+            app.init(project, azTask, atTask)
+
+            JavaExec runTask = project.tasks.register("run", JavaExec.class).get()
             runTask.configure {
                 group = TASK_GROUP
                 classpath = project.sourceSets.main.runtimeClasspath + project.sourceSets.test.runtimeClasspath
             }
 
             project.gradle.projectsEvaluated {
-                if (project.mainClassName != null && project.mainClassName != "unspecified") {
-                    azTask.pathJar("$project.name-RunMain", project.mainClassName)
-                    atTask.pathJar("$project.name-RunMain", project.mainClassName)
-                    runTask.main = project.mainClassName
+                if (!app.getMainClassName().equalsIgnoreCase('unspecified')) {
+                    azTask.pathJar("$project.name-RunMain")
+                    atTask.pathJar("$project.name-RunMain")
+                    runTask.mainClass.set(app.getMainClassName())
                 }
             }
         }
