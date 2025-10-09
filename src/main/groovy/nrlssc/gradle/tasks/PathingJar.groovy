@@ -4,13 +4,13 @@ import org.gradle.api.Project
 import org.gradle.api.execution.TaskExecutionGraph
 import org.gradle.api.tasks.bundling.Jar
 
-class PathingJar extends Jar {
+abstract class PathingJar extends Jar {
 
     static PathingJar createFrom(AppTask appTask, String jarName, String mainClassName, Closure config)
     {
         Project project = appTask.getProject()
         String taskName =   "$appTask.name-$jarName-PathingJar"
-        PathingJar pjar = project.tasks.create(taskName, PathingJar.class)
+        PathingJar pjar = project.tasks.register(taskName, PathingJar.class).get()
         project.sourceSets.each{ ss ->
             ss.allSource.srcDirs.each { src ->
                 if(src.exists()) pjar.inputs.dir(src.absolutePath)
@@ -55,6 +55,8 @@ class PathingJar extends Jar {
                         'Class-Path': cPath)
             }
         }
+        pjar.dependsOn(project.tasks.named('compileJava').get())
+
 
         return pjar
     }

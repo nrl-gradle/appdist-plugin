@@ -3,7 +3,7 @@ plugins{
     id 'groovy'
     id 'java'
     id 'com.gradle.plugin-publish' version '1.3.0'
-    id 'nrlssc.gradle' version '5.0.145'
+    id 'nrlssc.gradle' version '5.0.147'
 }
 
 compileJava.options.encoding = 'UTF-8'
@@ -18,7 +18,7 @@ dependencies {
     api gradleApi()
     api localGroovy()
     
-    api 'mil.navy.nrlssc:gplugin-commons:5.0.22'
+    api 'mil.navy.nrlssc:gplugin-commons:5.0.24'
 
     testImplementation gradleTestKit(),
             'junit:junit:4.12'

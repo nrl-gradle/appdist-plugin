@@ -8,7 +8,7 @@ import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.bundling.Tar
 
-class AppTar extends Tar implements AppTask {
+abstract class AppTar extends Tar implements AppTask {
     @Internal
     Jar internalJar
     @Internal

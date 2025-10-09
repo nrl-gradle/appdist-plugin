@@ -8,7 +8,7 @@ import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.bundling.Zip
 
-class AppZip extends Zip implements AppTask{
+abstract class AppZip extends Zip implements AppTask{
 
     @Internal
     Jar internalJar
