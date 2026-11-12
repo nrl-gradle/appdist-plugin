@@ -4,6 +4,7 @@ package nrlssc.gradle.tasks
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.tasks.Input
 
 class AppConfigure extends DefaultTask{
 
@@ -30,6 +31,7 @@ class AppConfigure extends DefaultTask{
         return this
     }
 
+    @Input
     String mainClassName = 'unspecified'
 
     def setMainClassName(String className) {
