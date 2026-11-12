@@ -5,6 +5,7 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Internal
 
 class AppConfigure extends DefaultTask{
 
@@ -37,7 +38,7 @@ class AppConfigure extends DefaultTask{
         this.mainClassName = className
     }
 
-    @Input
+    @Internal
     String getMainClassName() {
         return mainClassName
     }

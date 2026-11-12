@@ -12,7 +12,6 @@ interface AppTask extends Task {
     Jar getInternalJar()
     @Internal
     Map<String, List<File>> getSubAppDirs()
-    @Internal
     setMainClassName(String className)
     @Internal
     String getMainClassName()
