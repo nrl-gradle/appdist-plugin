@@ -31,13 +31,13 @@ class AppConfigure extends DefaultTask{
         return this
     }
 
-    @Input
     String mainClassName = 'unspecified'
 
     def setMainClassName(String className) {
         this.mainClassName = className
     }
 
+    @Input
     String getMainClassName() {
         return mainClassName
     }
